@@ -239,13 +239,13 @@ class Trainer:
         print('total_train_epochs',total_train_epochs)
         for epoch in range(total_train_epochs):
             #-----------------Eval Block Begining-----------------------
-            print('Start media ALL Eval--')
-            output_save_path = \
-                os.path.join(eval_save_dir,
-                                f'outputs.step.{total_steps}.json')
-            eval_log = self.evaluate(output_save_path=output_save_path)#eval batch_size clusters
-            print('Finish media ALL Eval--')
-            sys.exit()
+            # print('Start media ALL Eval--')
+            # output_save_path = \
+            #     os.path.join(eval_save_dir,
+            #                     f'outputs.step.{total_steps}.json')
+            # eval_log = self.evaluate(output_save_path=output_save_path)#eval batch_size clusters
+            # print('Finish media ALL Eval--')
+            # sys.exit()
             #-----------------Eval Block End-----------------------
             for step, batch in enumerate(train_dataloader):#1 cluster
                 # if step == 2:

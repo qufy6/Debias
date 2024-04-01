@@ -150,12 +150,12 @@ def load_idlist_dataset(
     test_step = 100
     General_number = 20
     if split=='train':
-        # clusters = clusters # train
-        clusters = clusters[0:1] # eval--3
+        clusters = clusters # train
+        # clusters = clusters[0:1] # eval--3
         # clusters = clusters[0:General_number] # general
     if split=='dev':
-        # clusters = clusters[::test_step] # train
-        clusters = clusters # eval--19176
+        clusters = clusters[::test_step] # train
+        # clusters = clusters # eval--19176
         # clusters = clusters[General_number :General_number*2] # general
     if split=='test':
         # clusters = clusters[256:]

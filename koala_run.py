@@ -42,8 +42,8 @@ def main(config: "DictConfig"):
     colorful_print(OmegaConf.to_yaml(config), fg='red')
     output_dir = get_hydra_output_dir()
 
-    input_file = os.path.join("./data", "test.json")  # Eval
-    # input_file = os.path.join("./data", "dev.json")  # Train
+    # input_file = os.path.join("./data", "test.json")  # Eval
+    input_file = os.path.join("./data", "dev.json")  # Train
     # input_file = os.path.join("/home/zhichao/qufeiyu/vi", "test.json")
     # input_file = os.path.join("/home/zhichao/qufeiyu/vi", "dev.json")
     # train_id, val_id, test_id = make_stereoset_id_dataset(input_file)

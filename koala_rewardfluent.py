@@ -293,19 +293,24 @@ class PromptDebiasReward(BaseReward):
         self.num_repeats =  4 # Num of repetitions for each example
         self.num_bootstraps = 4
 
-        # self.ALPHA = 0
+        self.ALPHA = 0
+        # self.ALPHA = 0.5
         # self.ALPHA = 0.2
         # self.ALPHA = 0.4
         # self.ALPHA = 0.6
         # self.ALPHA = 0.8
-        self.ALPHA = 1
+        # self.ALPHA = 1
 
 
 
 
 
         # self.task_lm = "samwit/koala-7b"
-        self.task_lm = "eachadea/vicuna-7b-1.1"
+        # self.task_lm = "eachadea/vicuna-7b-1.1"
+        self.task_lm = "openai-community/gpt2"
+
+
+
         self.device = torch.device("cuda" if torch.cuda.is_available()
                                    else "cpu")
         print('main DEVICE::::::::', self.device)
@@ -314,23 +319,25 @@ class PromptDebiasReward(BaseReward):
         t1 = time.time()                          
         # self._tokenizer = AutoTokenizer.from_pretrained(
         #     self.task_lm, cache_dir='/raid/zhichao/qufeiyu', local_files_only=True)
-        self._tokenizer = LlamaTokenizer.from_pretrained(
-            self.task_lm,  cache_dir = '/share/home/wenqingchen/feiyu/RL_debias/Model', local_files_only=True)
-        
+        # self._tokenizer = LlamaTokenizer.from_pretrained(
+        #     self.task_lm,  cache_dir = '/share/home/wenqingchen/feiyu/RL_debias/Model', local_files_only=True)
+        self._tokenizer = AutoTokenizer.from_pretrained("openai-community/gpt2")
+
         t2 = time.time()      
         print('tokenizer load success. Time:',(t2-t1))
         print('begin to load generator...')
         
-        # model = nn.DataParallel(model, device_ids=[0, 1])
-        self._generator = (LlamaForCausalLM.from_pretrained(
+        # self._generator = (LlamaForCausalLM.from_pretrained(
+        #                     self.task_lm,  cache_dir = '/share/home/wenqingchen/feiyu/RL_debias/Model', local_files_only=True)
+        #                    .to(self.device))  
+        self._generator = (AutoModelForCausalLM.from_pretrained(
                             self.task_lm,  cache_dir = '/share/home/wenqingchen/feiyu/RL_debias/Model', local_files_only=True)
                            .to(self.device))
 
         # self._generator = (AutoModelForCausalLM.from_pretrained(
         #                     self.task_lm, cache_dir='/raid/zhichao/qufeiyu', local_files_only=True)
         #                    )
-        # self._generator = nn.DataParallel(self._generator, device_ids=[0,1])
-        # self._generator.to(self.device)
+
         print('main DEVICE::::::::', self.device)
         t3 = time.time()  
         print('generator load success. Time:',(t3-t2)) 
@@ -411,26 +418,26 @@ class PromptDebiasReward(BaseReward):
             print('Result--Ps:Pa:Pu------:',rst)
 
             #-----------------eval block 1/2--------------------------------------------------------------------------------
-            result_path = "/share/home/wenqingchen/feiyu/RL_debias/result"
-            #$1
-            # result_name = '_Vicuna_MBPS_Sentence_TopKis256_KLisNo-ResCisNO_ALPHAis0.pkl'
-            # result_name = '_Vicuna_MBPS_Sentence_TopKis256_KLisNo-ResCisNO_ALPHAis02.pkl'
-            # result_name = '_Vicuna_MBPS_Sentence_TopKis256_KLisNo-ResCisNO_ALPHAis04.pkl'
-            # result_name = '_Vicuna_MBPS_Sentence_TopKis256_KLisNo-ResCisNO_ALPHAis06.pkl'
-            # result_name = '_Vicuna_MBPS_Sentence_TopKis256_KLisNo-ResCisNO_ALPHAis08.pkl'
-            result_name = '_Vicuna_MBPS_Sentence_TopKis256_KLisNo-ResCisNO_ALPHAis10.pkl'
+            # result_path = "/share/home/wenqingchen/feiyu/RL_debias/result"
+            # #$1
+            # # result_name = '_Vicuna_MBPS_Sentence_TopKis256_KLisNo-ResCisNO_ALPHAis0.pkl'
+            # # result_name = '_Vicuna_MBPS_Sentence_TopKis256_KLisNo-ResCisNO_ALPHAis02.pkl'
+            # # result_name = '_Vicuna_MBPS_Sentence_TopKis256_KLisNo-ResCisNO_ALPHAis04.pkl'
+            # # result_name = '_Vicuna_MBPS_Sentence_TopKis256_KLisNo-ResCisNO_ALPHAis06.pkl'
+            # # result_name = '_Vicuna_MBPS_Sentence_TopKis256_KLisNo-ResCisNO_ALPHAis08.pkl'
+            # result_name = '_Vicuna_MBPS_Sentence_TopKis256_KLisNo-ResCisNO_ALPHAis10.pkl'
 
-            print('result_name:', result_name)
+            # print('result_name:', result_name)
 
-            file_path = os.path.join(result_path, result_name)
-            if os.path.exists(file_path):
-                with open(file_path, "rb") as file:
-                    data = pickle.load(file)
-                    data.extend(x)
-            else:
-                data = x
-            with open(file_path, "wb") as file:
-                pickle.dump(data, file)
+            # file_path = os.path.join(result_path, result_name)
+            # if os.path.exists(file_path):
+            #     with open(file_path, "rb") as file:
+            #         data = pickle.load(file)
+            #         data.extend(x)
+            # else:
+            #     data = x
+            # with open(file_path, "wb") as file:
+            #     pickle.dump(data, file)
                 
             #-----------------eval block 1/2--------------------------------------------------------------------------------
 
@@ -445,8 +452,8 @@ class PromptDebiasReward(BaseReward):
             lms = (Ps+Pa)/(Ps+Pa+2*Pu)
             icat = lms*(min(ss, 1-ss)/0.5)
 
-            Reward = icat
-            # Reward = self.ALPHA * lms + (1-self.ALPHA) * (min(ss, 1-ss)/0.5)
+            # Reward = icat
+            Reward = self.ALPHA * lms + (1-self.ALPHA) * (min(ss, 1-ss)/0.5)
 
             print('ss--------',ss,'lms--------',lms,'icat--------',icat,'Alpha--------', self.ALPHA,'Reward--------',Reward)
 

@@ -97,7 +97,7 @@ report_to_wandb: false #2/2           ##
 # project_name: rl-prompt
 # run_name: null
 
-# checkpoint_path: null  # Train
+checkpoint_path: null  # Train
 
 # Condi/___Vicuna_Condi_Token_MBPS_NoFluentTech:
 # checkpoint_path: /raid/zhichao/qufeiyu/nlp/vi/debias_koala_rlprompt/outputs/2023-06-10/20-20-18/outputs/ckpt/ckpt.step.40000.pth
@@ -127,7 +127,7 @@ report_to_wandb: false #2/2           ##
 # checkpoint_path: /share/home/wenqingchen/feiyu/RL_debias/outputs/2024-03-26/15-47-31/outputs/ckpt/ckpt.step.26000.pth #alpha = 0.4, 26000 epoch
 # checkpoint_path: /share/home/wenqingchen/feiyu/RL_debias/outputs/2024-03-26/15-47-36/outputs/ckpt/ckpt.step.26000.pth #alpha = 0.6, 26000 epoch
 # checkpoint_path: /share/home/wenqingchen/feiyu/RL_debias/outputs/2024-03-26/15-47-50/outputs/ckpt/ckpt.step.26000.pth #alpha = 0.8, 26000 epoch
-checkpoint_path: /share/home/wenqingchen/feiyu/RL_debias/outputs/2024-03-26/15-48-04/outputs/ckpt/ckpt.step.26000.pth #alpha = 1.0, 26000 epoch
+# checkpoint_path: /share/home/wenqingchen/feiyu/RL_debias/outputs/2024-03-26/15-48-04/outputs/ckpt/ckpt.step.26000.pth #alpha = 1.0, 26000 epoch
 # checkpoint_path: 
 
 
