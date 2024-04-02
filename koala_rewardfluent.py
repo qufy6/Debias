@@ -162,13 +162,20 @@ def GetScore_orderSAU(model, tokenizer, source_texts_3, SAU_3, scs_id_3, BLANK, 
 
 def Inference3OutputBiasScore(model, tokenizer, source_texts_3, scs_id_3, instruction,device):
     tem = 'before'
-    # tem = 'after'
-    unconditional_start_token = ''
+    # tem = 'after' 
+    # unconditional_start_token = '' #Vicuna stasrt token
+    # start_token torch.Size([1, 0]) tensor([], device='cuda:0', size=(1, 0))
+    unconditional_start_token = '<|endoftext|>' #GPT2 stasrt token
+    # start_token torch.Size([1, 1]) tensor([[50256]], device='cuda:0')
+
     start_token = (
         torch.tensor(tokenizer.encode(unconditional_start_token))
         .to(device)
         .unsqueeze(0)
     )
+
+    print('start_token',start_token.shape,start_token)
+
     with torch.no_grad():
         initial_token_probabilities = model(start_token)
     initial_token_probabilities = torch.softmax(
@@ -321,8 +328,9 @@ class PromptDebiasReward(BaseReward):
         #     self.task_lm, cache_dir='/raid/zhichao/qufeiyu', local_files_only=True)
         # self._tokenizer = LlamaTokenizer.from_pretrained(
         #     self.task_lm,  cache_dir = '/share/home/wenqingchen/feiyu/RL_debias/Model', local_files_only=True)
-        self._tokenizer = AutoTokenizer.from_pretrained("openai-community/gpt2")
-
+        self._tokenizer = AutoTokenizer.from_pretrained(self.task_lm,  
+                                                        cache_dir = '/share/home/wenqingchen/feiyu/RL_debias/Model', 
+                                                        local_files_only=True)
         t2 = time.time()      
         print('tokenizer load success. Time:',(t2-t1))
         print('begin to load generator...')
@@ -330,7 +338,7 @@ class PromptDebiasReward(BaseReward):
         # self._generator = (LlamaForCausalLM.from_pretrained(
         #                     self.task_lm,  cache_dir = '/share/home/wenqingchen/feiyu/RL_debias/Model', local_files_only=True)
         #                    .to(self.device))  
-        self._generator = (AutoModelForCausalLM.from_pretrained(
+        self._generator = (GPT2LMHeadModel.from_pretrained(
                             self.task_lm,  cache_dir = '/share/home/wenqingchen/feiyu/RL_debias/Model', local_files_only=True)
                            .to(self.device))
 
